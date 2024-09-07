@@ -1,2 +1,3 @@
 # weather-site
-Project of a site that shows the weather, time, date and some additional information
+Project of a website that shows information about the weather, time and date.
+Currently the weather shown is one near Paris (i do not want to expose my location), i don't have functional code to detect coordinates of a user.

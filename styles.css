@@ -1,0 +1,37 @@
+h1 {
+    position: relative;
+    font-size: 32px;
+    
+}
+body {
+    background-color: #1E201E;
+    font-family: 'Trebuchet MS', sans-serif;
+    color: #ECDFCC;
+}
+
+p {
+    font-size: 24px;
+    text-align: top;
+    position: relative;
+}
+
+#weatherButton {
+    border: 2px solid;
+    background-color: #697565;
+    font-size: 20px;
+    display: inline-block;
+    position: relative;
+}
+#weatherShow{
+    padding-left: 12px;
+    padding-bottom: 12px;
+    width: 50%;
+    margin: auto;
+    background-color: #3C3D37;
+    box-shadow: 2px 2px 32px #3C3D37;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+}
