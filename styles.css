@@ -35,3 +35,13 @@ p {
     transform: translate(-50%, -50%);
 
 }
+.dot {
+    height: 125px;
+    width: 125px;
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 50px;
+    margin-top: -10px;
+}
+

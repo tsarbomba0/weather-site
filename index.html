@@ -5,6 +5,7 @@
         <link href="styles.css" rel="stylesheet" />
         <script src="./weather.js"></script>
         <title>Weather</title>
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' './weather.js';">
     </head>
     <body>
         <div id="weatherShow">
@@ -13,8 +14,11 @@
             <p id="humidity">a</p>
             <p id="rain">a</p>
             <p id="windspeed">a</p>
+            
             <!-- <button id="weatherButton">Read the weather!</button> -->
         </div>
+        <span class="dot"></span>
+
         
     </body>
 </html>
