@@ -38,10 +38,11 @@ p {
 .dot {
     height: 125px;
     width: 125px;
-    background-color: #FFFFFF;
+    background-color: #6e1010;
     border-radius: 50%;
-    display: inline-block;
+    display: block;
     margin-left: 50px;
     margin-top: -10px;
+    box-shadow: 2px 2px 32px #6e1010;
 }
 

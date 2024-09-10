@@ -25,20 +25,62 @@ async function get_weather_info(){
     }
 } 
 
+// 
+
+
+function identifyUser(){
+    var ID = localStorage.getItem("WeatherUserID");
+    console.log(ID);
+    if (ID == null) {   
+        userid_generated = Math.random();
+        ID = userid_generated
+        localStorage.setItem("UserID",`${userid_generated}`);
+        const main_div = document.getElementById("weatherShow");
+
+        const button = document.createElement('button');
+        const input = document.createElement('input');
+    
+        button.setAttribute("id", "Button");
+        input.setAttribute("id", "cityInput");    
+    
+        main_div.appendChild(button);
+        main_div.appendChild(input);
+    
+        document.getElementById("Button").addEventListener("click", (e) => {
+            console.log(`${input.value}`);
+            if (input.value == "") {
+                console.log(`aa`);
+            } else {
+                fetch(`http://192.168.0.2:5555/write/${userid_generated}&${input.value}`)
+            }
+        });
+    } else {
+        fetch(`http://192.168.0.2:5555/read/${ID}`)
+        .then(resp => resp.json())
+        .then(response => console.log(response))
+    }
+}
 function sunMovement(time){
+
+    // variables
     let temp, temp2, sun;
+    
+    // turning time into individual hour and minute numbers
     temp = time.slice(0, 2);
     temp2 = time.slice(3, 5);
+    
+    // Calculating minutes from given time
     minutes = Number(temp) * 60 + Number(temp2);
-    percent_of_sun_elevation = minutes/1440 * 65;
+    percent_of_sun_elevation = minutes/1440 * 45;
     console.log(percent_of_sun_elevation);
     document.querySelector('.dot').style.marginTop = `${percent_of_sun_elevation}%`;
 
     // Coloring part
-    document.querySelector('.dot').backgroundColor = "red"
-    
-
+    const calculatedYellow = 255 - minutes/6
+    document.querySelector('.dot').style.backgroundColor = `rgb(255, ${calculatedYellow}, 15)`;
+    document.querySelector('.dot').style.boxShadow = `0px 0px 12px 24px rgb(255, ${calculatedYellow}, 15)`
 }
+
 // Sets text related to weather
 function set_weather_text(weather_data){
     document.getElementById("temperature").innerHTML = `🌡 ${weather_data.current.temperature_2m}°C`;
@@ -86,16 +128,16 @@ function set_time_text(time_data){
 
 // Executes everything after loading page
 window.addEventListener("load", (e) => {
-    console.log("Page loaded");
     get_weather_info();
     get_time_date_info();
+
+
+    identifyUser();
+
+    // repeats every 4 seconds
     setInterval(get_weather_info, 4000);
     setInterval(get_time_date_info, 4000);
-    /*document.getElementById("weatherButton").addEventListener("click", (e) => {
-        get_weather_info();
-        get_time_date_info();
     
-    });*/
 });
 
 
