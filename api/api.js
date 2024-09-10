@@ -4,7 +4,7 @@ const api = exp();
 const port = 5555;
 
 // MongoDB
-const uri = `mongodb+srv://weatherUser:Auchampsdumars@cluster0.9ph1h.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = `mongodb+srv://xx:xx@cluster0.9ph1h.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 const { MongoClient } = require("mongodb");
 const client = new MongoClient(uri);
 
