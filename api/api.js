@@ -45,19 +45,17 @@ async function write_to_db(object1, object2) {
     }
   }
 
-
-
-
 api.use(cors(corsOptions)) // fixes cors errors
 
 api.get('/read/:userid', (req, res) => {
+    // Read action from db
     var query = { userid: `${req.params.userid}` }; 
     read_from_db(query, res);
 })
 
 api.get('/write/:userid&:city', (req, res) => {
-    res.send(`${req.params.userid}`);
-    //var object = { userid: `${req.params.userid}`, city: `${req.params.city}` }; 
+    // Writing to db
+    res.send(`${req.params.userid}`); 
     write_to_db({ "userid": req.params.userid}, {$set: {city: req.params.city} });
 })
 

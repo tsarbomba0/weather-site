@@ -1,5 +1,6 @@
 const weather_url="https://api.open-meteo.com/v1/forecast?latitude=48.2584&longitude=2.8563&current=temperature_2m,relative_humidity_2m,is_day,rain,wind_speed_10m&timezone=auto"
 const time_url="https://timeapi.io/api/time/current/zone?timeZone="
+const city_api="http://api.openweathermap.org/geo/1.0/direct?q=&limit=1&appid=0073a7c877d5d41ebaae861808ba2f57"
 let timezone; 
 
 // Information for current time and date
@@ -16,50 +17,66 @@ async function get_time_date_info(){
 // Information for weather
 async function get_weather_info(){
     try {
-        const resp = await fetch(weather_url); 
+
+        // Responsible for fetching information about the user and his city
+        var ID = localStorage.getItem("UserID");
+        var response_city = await fetch(`http://192.168.0.2:5555/read/${ID}`);
+        var response_city_json = await response_city.json();
+
+        // Responsible for fetching information about city coordinates
+        var cityInfo = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${response_city_json.city}&limit=1&appid=0073a7c877d5d41ebaae861808ba2f57`);
+        var cityInfo_json = await cityInfo.json();
+        cityInfo_json=cityInfo_json[0]
+
+        // Responsible for fetching information about the weather in the city
+        const resp = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${cityInfo_json.lat}&longitude=${cityInfo_json.lon}&current=temperature_2m,relative_humidity_2m,is_day,rain,wind_speed_10m&timezone=auto`); 
         const data1 = await resp.json();
         set_weather_text(data1);
         
     } catch (error) {
-        console.log(`Fetching weather didn't work! ${error}`);
+        console.log(`Fetching weather didn't work!! ${error}`);
     }
 } 
 
-// 
+
 
 
 function identifyUser(){
-    var ID = localStorage.getItem("WeatherUserID");
-    console.log(ID);
+    var ID = localStorage.getItem("UserID");
     if (ID == null) {   
+        // Generating if no userid is present
         userid_generated = Math.random();
-        ID = userid_generated
         localStorage.setItem("UserID",`${userid_generated}`);
-        const main_div = document.getElementById("weatherShow");
+        
 
+        // Button and input for user's city
         const button = document.createElement('button');
         const input = document.createElement('input');
-    
+        const main_div = document.getElementById("weatherShow");
+
         button.setAttribute("id", "Button");
         input.setAttribute("id", "cityInput");    
-    
+        
         main_div.appendChild(button);
         main_div.appendChild(input);
-    
+        
+        // Button on-click event
         document.getElementById("Button").addEventListener("click", (e) => {
             console.log(`${input.value}`);
             if (input.value == "") {
-                console.log(`aa`);
+                console.log(`Empty field!`);
             } else {
-                fetch(`http://192.168.0.2:5555/write/${userid_generated}&${input.value}`)
+                fetch(`http://192.168.0.2:5555/write/${userid_generated}&${input.value}`) // Points to local API to write information about the user's chosen city
             }
         });
     } else {
+        // Obtains information about user's city from the API
         fetch(`http://192.168.0.2:5555/read/${ID}`)
         .then(resp => resp.json())
         .then(response => console.log(response))
     }
 }
+
 function sunMovement(time){
 
     // variables
@@ -72,7 +89,6 @@ function sunMovement(time){
     // Calculating minutes from given time
     minutes = Number(temp) * 60 + Number(temp2);
     percent_of_sun_elevation = minutes/1440 * 45;
-    console.log(percent_of_sun_elevation);
     document.querySelector('.dot').style.marginTop = `${percent_of_sun_elevation}%`;
 
     // Coloring part
@@ -128,11 +144,9 @@ function set_time_text(time_data){
 
 // Executes everything after loading page
 window.addEventListener("load", (e) => {
+    identifyUser();
     get_weather_info();
     get_time_date_info();
-
-
-    identifyUser();
 
     // repeats every 4 seconds
     setInterval(get_weather_info, 4000);
