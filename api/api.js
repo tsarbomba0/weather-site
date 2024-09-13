@@ -9,7 +9,7 @@ const { MongoClient } = require("mongodb");
 const client = new MongoClient(uri);
 
 
-// CORS
+// fixes cors errors
 const cors=require("cors");
 const corsOptions ={
    origin:'*', 
@@ -17,22 +17,29 @@ const corsOptions ={
    optionSuccessStatus:200,
 }
 
-// Connect to database
+
+// Function to read from database
 async function read_from_db(query, res) {
   try {
     await client.connect();
     const database = client.db('weather_users');
     const collection = database.collection('weatherUsers');
     var result = await collection.findOne(query)
-    .then(response => res.send(response))
-    
-    
+    .then(response => {
+      if (response == null){
+        res.status(204).send(response)
+        console.log("Null response!")
+      } else {
+        res.status(200).send(response)
+      }
+        
+    });
   } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
+    //await client.close();
   }
 }
 
+// Function to write to the database
 async function write_to_db(object1, object2) {
     try {
       await client.connect();
@@ -40,25 +47,28 @@ async function write_to_db(object1, object2) {
       const collection = database.collection('weatherUsers');
       await collection.updateOne(object1, object2, {upsert: true});
     } finally {
-      // Ensures that the client will close when you finish/error
       await client.close();
     }
   }
 
-api.use(cors(corsOptions)) // fixes cors errors
+api.use(cors(corsOptions))
 
+// API response for a GET request with /read/<userid>
 api.get('/read/:userid', (req, res) => {
     // Read action from db
     var query = { userid: `${req.params.userid}` }; 
     read_from_db(query, res);
 })
 
+// API response for a GET request with /write/<userid>&<city>
 api.get('/write/:userid&:city', (req, res) => {
     // Writing to db
     res.send(`${req.params.userid}`); 
     write_to_db({ "userid": req.params.userid}, {$set: {city: req.params.city} });
 })
 
+
+// API listening on port 5555
 api.listen(port, () => {
     console.log(`Listening on ${port}`)
 })

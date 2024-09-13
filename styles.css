@@ -41,8 +41,27 @@ p {
     background-color: #6e1010;
     border-radius: 50%;
     display: block;
-    margin-left: 50px;
+    margin-left: 75px;
     margin-top: -10px;
     box-shadow: 2px 2px 32px #6e1010;
 }
 
+#Button1, #Button2 {
+    border: 3px solid #1E201E;
+    background-color: #1E201E;
+    color: #ECDFCC;
+    cursor: pointer;
+    padding: 3.1px 8px;
+    font-family: 'Trebuchet MS', sans-serif;
+    
+}
+
+#cityInput, #cityInput2 {
+    background-color: #3C3D37;
+    color: #ECDFCC;
+    border-radius: 0px;
+    border: 3px solid #1E201E;
+    outline: none;
+    height: 20px;
+    font-family: 'Trebuchet MS', sans-serif;
+}
